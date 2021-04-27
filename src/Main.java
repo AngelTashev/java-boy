@@ -1,15 +1,17 @@
 import cpu.CPU;
+import utils.DebugWindow;
 
 public class Main {
 
     public static void main(String[] args) {
         CPU cpu = new CPU();
+        DebugWindow debugWindow = new DebugWindow();
 
-        cpu.ADDr_e();
-        cpu.ADDr_e();
-        cpu.ADDr_e();
+        cpu.opcode("80");
+        cpu.opcode("85");
+        cpu.opcode("87");
 
-        System.out.println(300 & 255);
+        debugWindow.showRegisters(cpu.getRegisters());
     }
 
 }
