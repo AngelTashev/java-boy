@@ -30,12 +30,17 @@ public class CPU {
             case "85": addToA("l"); break;
             case "86": addToA("(HL))"); break;
             case "87": addToA("a"); break;
+
+            default:
+                // In case an invalid instruction is passed -> no error should be shown
+                System.out.println("No instruction set");
+                break;
         }
     }
 
     private void addToA(String regToAdd) {
 
-        final int sumReg = getReg("a") + getReg(regToAdd);
+        final int sumReg = getReg("a") - getReg(regToAdd);
 
         try {
             setReg("a", sumReg);

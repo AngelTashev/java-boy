@@ -18,4 +18,10 @@ public class DebugWindow {
         JOptionPane.showMessageDialog(null, registerInfo.toString());
     }
 
+    public void showMemoryAddress(int address, int value) {
+
+        JOptionPane.showMessageDialog(null, String.format("0x%04X: %d", address, value));
+    }
+
+
 }
