@@ -27,6 +27,11 @@ public class Memory {
         for (int i = 0; i < this.memory.length; i++) {
             this.memory[i] = new UByte(0);
         }
+
+
+        // TESTS
+
+        this.memory[0x4000].setValue(200);
     }
 
     public void write(int address, int value) {

@@ -1,35 +1,45 @@
 package cpu;
 
+import memory.Memory;
 import types.UnsignedIntType;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 public class CPU {
 
     private final Registers registers;
 
+    private final Memory memory;
+
     public CPU() {
         this.registers = new Registers();
+        this.memory = new Memory();
 
         setReg("b", 100);
         setReg("l", 100);
+
     }
 
     /** Opcode table **/
-    public void opcode(String opcode) {
+    public void opcode(String opcode, String value) {
 
         // ADD
         switch (opcode){
-            case "80": addToA("b"); break;
-            case "81": addToA("c"); break;
-            case "82": addToA("d"); break;
-            case "83": addToA("e"); break;
-            case "84": addToA("h"); break;
-            case "85": addToA("l"); break;
-            case "86": addToA("(HL))"); break;
-            case "87": addToA("a"); break;
+            case "00": noOperation(); break;
+            case "10": stop(); break;
+
+            case "77":
+
+            case "80": addRegToA("b"); break;
+            case "81": addRegToA("c"); break;
+            case "82": addRegToA("d"); break;
+            case "83": addRegToA("e"); break;
+            case "84": addRegToA("h"); break;
+            case "85": addRegToA("l"); break;
+            case "86": addRegToA("(HL))"); break; // TODO
+            case "87": addRegToA("a"); break;
+
+            case "C6": addD8ToA(value);
 
             default:
                 // In case an invalid instruction is passed -> no error should be shown
@@ -38,10 +48,27 @@ public class CPU {
         }
     }
 
-    private void addToA(String regToAdd) {
+    private void noOperation() {
+        setTime(1, 4);
+    }
 
-        final int sumReg = getReg("a") - getReg(regToAdd);
+    private void stop() {
+        setTime(2, 4); // TODO
+    }
 
+    private void addRegToA(String regToAdd) {
+        final int sumReg = getReg("a") + getReg(regToAdd);
+        sum(sumReg);
+        setTime(1, 4);
+    }
+
+    private void addD8ToA(String d8) {
+        int sumReg= getReg("a") + Integer.parseInt(d8);
+        sum(sumReg);
+        setTime(2, 4);
+    }
+
+    private void sum(int sumReg) {
         try {
             setReg("a", sumReg);
             setFlag(0x00);
@@ -49,8 +76,6 @@ public class CPU {
             setReg("a", sumReg & 255);
             setFlag(0x10);
         }
-
-        setTime(1, 4);
     }
 
     private void setTime(int m, int t) {
